@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Security Write-Up</title>
+  </head>
+  <body>
+    <h1>Web Development - Security Analysis</h1>
+    <h2>by Ahmet Armanc Keser</h2>
+    <section id = "intro">
+      <h2>Introduction</h2>
+      <p>
+        <a href="http://pacific-basin-48100.herokuapp.com/">Pacific-Basin</a>, developed
+          by David Massart, contains an app that acts as both the back-end of a
+          Driver-Passenger matching app like Lyft or Uber. Since such apps are
+          highly concerned with important data such as location, I will be reviewing
+          and commenting on the potential security breaches made in the app and how
+          to approach them.
+      </p>
+    </section>
+    <section id = "methodology">
+      <h2>Methodology</h2>
+      <h3>Tools</h3>
+        There are several tools that was used to test the security of the app.
+      <ul>
+        <li>Burp Suite
+        <ul>
+          <li>
+            Burp Suite is a tool with which testing security of web apps are made easier. It is
+            paid, but has a free community version (https://portswigger.net/burp). Using this
+            version, a client will be able to intercept and modify the communication between
+            their personal computer and a website they are trying to connect to. This tool allows
+            for a great range of security checks, yet as goes with many application related to
+            security, it is a double edged sword.
+          </li>
+          <li>
+            It allows the use of a proxy to intercept request headers of HTTP requests.
+          </li>
+          </ul>
+        </li>
+        <li>OWASP Zap
+          <ul>
+            <li>The OWASP Zed Attack Proxy (ZAP) is one of the world’s most popular free security tools and is actively maintained by hundreds of international volunteers*. It can help you automatically find security vulnerabilities in your web applications while you are developing and testing your applications. Its also a great tool for experienced pentesters to use for manual security testing. </li>
+          </ul>
+        </li>
+        <li>curl
+          <ul>
+            <li>curl is used in command lines or scripts to transfer data. It is also used in cars, television sets, routers, printers, audio equipment, mobile phones, tablets, settop boxes, media players and is the internet transfer backbone for thousands of software applications affecting billions of humans daily. </li>
+          </ul>
+        </li>
+      </ul>
+      <h3>Methods</h3>
+      <p>
+        As always with security, the first course of action was finding the input points.
+        After finding both "/rides" and "/passenger.json" took inputs, I started
+        experimenting with various payloads to see if there was any data-leak,
+        or unintended behavior that led to contract violation of the API. Findings
+        are listed below
+      </p>
+    </section>
+
+    <section id = "abstract">
+      <h2>Abstract of Findings</h2>
+        <p>
+          To function, the app relies heavily on usernames and location values. It also
+          only contains two places from which an input might be sent, "/rides" and "/passenger.json"
+          APIs. David did a good job clearing the inputted data from any possible attacks, however he did not
+          validate the input well enough to ensure that the inputted latitude and longitude
+          are not problematic. One major issue, however is about the privacy. Since
+          there is no authentication, a client can easily use the username shown in the
+          home-page and access the list of passengers, gaining access to their whole history
+          of location. The app also lacks conventional and important Respond headers that
+          protect user data.
+        </p>
+    </section>
+
+    <section id = "issues">
+      <h2>Issues Found</h2>
+
+      <div class="issue">
+        <h3>Application Error</h3>
+          <h4>Issue</h4>
+            <p>Application halts with Application Error after some number of unconventional input</p>
+          <h4>Location</h4>
+            <p><a href="http://pacific-basin-48100.herokuapp.com/">/</a></p>
+          <h4>Severity</h4>
+            <p>
+              <em>HIGH</em><br>
+              This is supposed to be a back-end server of a highly used app.
+              It cannot halt with an Application Error, if it does, it is game
+              over for the owners of the app.
+            </p>
+          <h4>Description</h4>
+            <p>
+              The problem occured while I was testing several payloads that
+              had out-of-range latitudes or longitudes, and also data that included
+              an object rather then a string. Here are the screenshots of the problem
+              and the payloads.
+            </p>
+          <h4>Proof</h4>
+          <img src="images/payload_app_error.png" alt="payloads">
+          <img src="images/app_error.png" alt="app error">
+          <h4>Resolution</h4>
+            <p>
+              The app must check for the exact types of the input it is getting to function properly.
+              I highly reccomend the <a href="https://github.com/hapijs/joi">JOI API</a> to validate any sort of input from the user.
+            </p>
+      </div>
+
+      <div class="issue">
+        <h3>Missing Headers</h3>
+          <h4>Issue - CWE ID: 16</h4>
+            <p>
+              The app contained missing headers in most of its responses such as
+              the "X-Content-Type-Options" or the "X-Frame-Options" headers.
+            </p>
+          <h4>Location</h4>
+          <p>
+            <a href="http://pacific-basin-48100.herokuapp.com/">/</a><br>
+            <a href="http://pacific-basin-48100.herokuapp.com/rides">/rides</a>
+          </p>
+          <h4>Severity</h4>
+          <p>
+            <em>MEDIUM</em><br>
+            Even though headers are not as important as an XSS attack or data leak,
+            they can prevent such attacks. One of those attacks is 'ClickJacking'
+            attacks, where the attacker redirects the clicks to their own website.
+            Last but not least, X-XSS-Protection is crucial to decrease XSS vulnerabilities.
+          </p>
+          <h4>Description</h4>
+          <p>
+            This issue was found through OWASP Zap scan.
+          </p>
+          <h4>Proof</h4>
+            <img src="images/xframe_header.png" alt="X-Frame-Options Header">
+            <img src="images/xcontent_type.png" alt="X-Content-Type-Options Header">
+            <img src="images/xss_protection.png" alt="XSS-Protection Header">
+          <h4>Resolution</h4>
+          <p>
+            Such problems are easy to solve. Adding the headers can be done in expressjs.
+            Responsible web developers must follow the convention to let the requesting
+            party aware of the response they are getting. This is beneficial for both
+            the client and the server.
+          </p>
+      </div>
+
+      <div class="issue">
+        <h3>Unchecked Location Input</h3>
+          <h4>Issue</h4>
+          <p>
+            The application does not check if the location input is in bound of earth,
+            more importantly, if it includes strings or is undefined.
+          </p>
+          <h4>Location</h4>
+            <a href="http://pacific-basin-48100.herokuapp.com/rides">/rides</a>
+          <h4>Severity</h4>
+          <em>HIGH</em><br>
+          <p>
+            This problem is crucial! It lets the client send arbitrary data to the
+            server and get back information about passengers or vehicles. Not only that
+            this might render the API useless, as the fact that the data returned
+            by the API will be expected to be valid and might break applications using it.
+          </p>
+          <h4>Description</h4>
+          <p>
+            One of the tests using curl included the payload <code>"username=test&lat=lol&lng=lol"</code>
+            and the API returned an object including the vehicle information.
+          </p>
+          <h4>Proof</h4>
+          <img src="payload_incorrect.png" alt="Incorrect payload and the response">
+          <h4>Resolution</h4>
+          <p>
+            The verification and the validation of data must be made as soon as the
+            input is recieved. Again the <a href="https://github.com/hapijs/joi">JOI API</a> is perfect for this.
+            However David did a good job sanitizing the data using mongoSanitize.
+          </p>
+      </div>
+
+      <div class="issue">
+        <h3>Privacy</h3>
+          <h4>Issue</h4>
+          <p>
+            Using the information provided on the main page, a client can use
+            the username of a vehicle to access passenger information, and a random
+            string to access the vehicle information, rendering privacy obsolete.
+            And the website is using the "HTTP" rather than "HTTPS"...
+          </p>
+          <h4>Location</h4>
+            <a href="http://pacific-basin-48100.herokuapp.com/">/</a><br>
+            <a href="http://pacific-basin-48100.herokuapp.com/rides">/rides</a><br>
+            <a href="http://pacific-basin-48100.herokuapp.com/passenger.json">/passenger.json</a>
+          <h4>Severity</h4>
+          <em>HIGH</em><br>
+          <p>
+            This application is heavily dependent on location data. If it gives all of the information away without any security
+            or authentication measures, this could end with a lawsuit.
+          </p>
+          <h4>Description</h4>
+          <p>
+            The homepage has information about vehicles providing a username to a vehicle.
+            I used that information and through sending it to the "rides" API, I got back
+            a list of passengers, then I queried the passenger information through
+            "passenger.json?username=<em>name</em>". I had the history of the user
+          </p>
+          <h4>Proof</h4>
+            No proof is needed. This is a design flaw.
+          <h4>Resolution</h4>
+          <p>
+            I highly reccomend an addition of authentication system and also
+            making the homepage only accessible through logging in.
+            The website also must be used through a secure protocol, for it contains
+            sensitive information.
+          </p>
+      </div>
+    </section>
+
+    <section id = "conclusion">
+      <h2>Conclusion</h2>
+      <p>
+        The app has lots of defense against XSS using the "validator" and the "mongoSanitize"
+        packages. However, there are still lots of flaws that could lead to unimaginable harm
+        to the app-owner and its clients. The app must be revised and before it is deployed again,
+        it must get a security certificate to serve the page on "HTTPS".
+      </p>
+    </section>
+
+    <section id = "references">
+      <h2>References</h2>
+      <a href="https://tuftsdev.github.io/WebProgramming/assignments/a4.html">COMP20 - Assignment Page</a><br>
+      <a href="http://www.veracode.com/security/xss">XSS</a><br>
+      <a href="http://www.youtube.com/watch?v=lcO1BTNh8r8">NOSQL injection</a><br>
+      <a href="http://blog.websecurify.com/2014/08/hacking-nodejs-and-mongodb.html">Node.js and MongoDB flaws</a><br>
+    </section>
+
+  </body>
+</html>

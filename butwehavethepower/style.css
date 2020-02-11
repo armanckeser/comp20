@@ -1,0 +1,25 @@
+html {
+  width: 100%;
+  color: black;
+  background-color: #EDF5E1;
+}
+
+video {
+  width: 70%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 10px;
+}
+
+h1 {
+  text-align: center;
+  font-family: Helvetica, sans-serif;
+}
+
+p {
+  text-align: center;
+  font-size: 32px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+}

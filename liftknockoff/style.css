@@ -1,0 +1,35 @@
+/* AHMET ARMANC KESER
+ * Style.css
+ * Comp20
+ * Spring 2019
+
+ * Styles the map and the text for the index page */
+
+#map {
+  height: 90%;
+  width : 90%;
+  margin: 10px auto auto auto;
+  border-radius: 5px;
+}
+
+#appName {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  font-variant-caps: small-caps;
+  width: 100%;
+  background-color: inherit;
+  color: #d59563;
+}
+
+#sign {
+  font-variant-caps: all-petite-caps;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #38414e;
+  color: #333;
+}

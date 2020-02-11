@@ -1,0 +1,337 @@
+<!--
+  /* AHMET ARMANC KESER
+   * index.html
+   * Comp20
+   * Spring 2019
+
+   * Index page for BetterLift
+-->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>BetterLift</title>
+  <meta name="viewport" content="initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+  <script type="text/javascript">
+    const myID = 'Wkevc4Sj';
+    const myIcon = 'images/marker.png';
+    const passIcon = 'images/passenger.png';
+    const carIcon = 'images/car.png';
+    const weinerIcon = 'images/weinermobile.png';
+    const has = Object.prototype.hasOwnProperty;
+
+    var infowindow = {};
+    var directionsService = {};
+    var directionsDisplay = {};
+    var userLocation = {};
+    var weinerExists = false;
+
+    async function run() {
+      try {
+        let map = await initMap();
+        renderMap(map);
+        let userMarker = addUserMarker(map);
+
+        let request = getRide();
+        let response = await request;
+        let ride = await response.json();
+        console.log(ride);
+        let userType = has.call(ride, "vehicles") ? "passenger" : "vehicle";
+
+        populateMap(userType, ride, map, userMarker);
+      } catch (e)
+      {
+        alert (e);
+      }
+    }
+
+    // getLocation is a promise that resolves with the location that uses navigator
+    const getLocation = new Promise(function(resolve, reject) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      } else {
+        reject('Browser does not support geolocation');
+      }
+    });
+
+    // initMap() when called initializes the map element on the body using
+    //    the user's location
+    async function initMap() {
+      var position = await getLocation;
+      userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+      return new google.maps.Map(document.getElementById('map'), {
+        center: userLocation,
+        zoom: 16,
+        disableDefaultUI: true,
+        styles: [{
+            elementType: 'geometry',
+            stylers: [{
+              color: '#242f3e'
+            }]
+          },
+          {
+            elementType: 'labels.text.stroke',
+            stylers: [{
+              color: '#242f3e'
+            }]
+          },
+          {
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#746855'
+            }]
+          },
+          {
+            featureType: 'administrative.locality',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#d59563'
+            }]
+          },
+          {
+            featureType: 'poi',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#d59563'
+            }]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'geometry',
+            stylers: [{
+              color: '#263c3f'
+            }]
+          },
+          {
+            featureType: 'poi.park',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#6b9a76'
+            }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry',
+            stylers: [{
+              color: '#38414e'
+            }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'geometry.stroke',
+            stylers: [{
+              color: '#212a37'
+            }]
+          },
+          {
+            featureType: 'road',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#9ca5b3'
+            }]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry',
+            stylers: [{
+              color: '#746855'
+            }]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'geometry.stroke',
+            stylers: [{
+              color: '#1f2835'
+            }]
+          },
+          {
+            featureType: 'road.highway',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#f3d19c'
+            }]
+          },
+          {
+            featureType: 'transit',
+            elementType: 'geometry',
+            stylers: [{
+              color: '#2f3948'
+            }]
+          },
+          {
+            featureType: 'transit.station',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#d59563'
+            }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry',
+            stylers: [{
+              color: '#17263c'
+            }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.fill',
+            stylers: [{
+              color: '#515c6d'
+            }]
+          },
+          {
+            featureType: 'water',
+            elementType: 'labels.text.stroke',
+            stylers: [{
+              color: '#17263c'
+            }]
+          }
+        ]
+
+      });
+    }
+
+    // renderMap(map) when given a google.maps.map object,
+    //    adds direction service and an infoWindow to the map.
+    //    also adds a marker on the current position of the user.
+    function renderMap(map) {
+      infowindow = new google.maps.InfoWindow();
+      directionsService = new google.maps.DirectionsService();
+      directionsDisplay = new google.maps.DirectionsRenderer();
+
+      directionsDisplay.setMap(map);
+      directionsDisplay.setOptions({
+        suppressMarkers: true
+      });
+    }
+
+    // getRide() returns a promise that resolves with a JSON object returned from the
+    //    ride API
+    async function getRide() {
+      const url = 'https://mysterious-retreat-58234.herokuapp.com/rides';
+      const params = `username=${myID}&lat=${userLocation.lat}&lng=${userLocation.lng}`;
+
+      return fetch(url, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+        body: params,
+      });
+    }
+
+    // addUserMarker(map) adds a user marker to the provided map
+    function addUserMarker(map) {
+      const content = `<p><strong>Your Location:</strong><br /> Lat = ${precise(userLocation.lat, 4)} Lng = ${precise(userLocation.lng, 4)}`;
+      let userMarker = newMarker(userLocation, myIcon, content, map);
+      google.maps.event.addListener(userMarker, 'click', function() {
+        infowindow.setContent(this.content);
+        infowindow.open(map, this);
+      });
+      return userMarker;
+    }
+
+    // newMarker(position, icon, content, map) returns a new marker with the
+    //    arguments as marker properties.
+    function newMarker(position, icon, content, map) {
+      return new google.maps.Marker({
+        position: position,
+        icon: icon,
+        content: content,
+        map: map
+      });
+    }
+
+    // newMarkerwListener(position, icon, content, map) returns a new marker with
+    //    arguments as marker properties and a popup click listener added.
+    function newMarkerwListener(position, icon, content, map) {
+      let marker = newMarker(position, icon, content, map);
+      google.maps.event.addListener(marker, 'click', function() {
+        infowindow.setContent(this.content);
+        infowindow.open(map, this);
+      });
+
+      return marker;
+    }
+
+    // populateMap(userType, ride, map, marker) given the type of the user,
+    //  ride API response JSON object, a google map and a user marker,
+    //  populates the map with the objects of the ride and modifies the
+    //  marker to represent the nearest object
+    function populateMap(userType, ride, map, marker) {
+      const elemArray = ride[userType == "passenger" ? "vehicles" : "passengers"];
+      let nearest = elemArray[0];
+      let weinerMobile = {};
+
+      for (var i = 0; i < elemArray.length; i++) {
+        let elem = elemArray[i];
+        let nearestDistance = distanceTo(userLocation, nearest);
+        let distance = distanceTo(userLocation, elem);
+
+        let content = `<p><strong>Name: </strong> ${elem.username}<br />${distance} miles away from you`;
+        let icon = userType == "vehicle" ? passIcon : carIcon;
+
+        if (elem.username == "WEINERMOBILE") {
+          icon = weinerIcon;
+          weinerExists = true;
+          weinerMobile = elem;
+        }
+        newMarkerwListener(elem, icon, content, map);
+        nearest = nearestDistance < distance ? nearest : elem;
+      }
+
+      if (!(nearest === undefined)) {
+        marker.content += `<br /><strong>Nearest: ${nearest.username}</strong><br />${distanceTo(userLocation, nearest)} miles away from you`;
+      }
+
+      if (weinerExists) {
+        marker.content += `<br /><strong>Weinermobile:</strong><br />${distanceTo(userLocation, weinerMobile)} miles away`;
+      } else {
+        marker.content += "<br />The Weinermobile is nowhere to be seen";
+      }
+
+    }
+
+    /* HELPER FUNCTIONS */
+    function precise(x, y) {
+      return Number.parseFloat(x).toPrecision(y);
+    }
+
+    function findDistFromTo(from, to) {
+      var vLatLng = new google.maps.LatLng(
+        parseFloat(from.lat),
+        parseFloat(from.lng)
+      );
+      var cLatLng = new google.maps.LatLng(
+        parseFloat(to.lat),
+        parseFloat(to.lng)
+      );
+      return google.maps.geometry.spherical.computeDistanceBetween(
+        cLatLng,
+        vLatLng
+      );
+    }
+
+    function toMiles(meters) {
+      return meters * 0.000621371192;
+    }
+
+    function distanceTo(from, to) {
+      return precise(toMiles(findDistFromTo(from, to)), 4);
+    }
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCGS4MO1ZAydBRdLxdoWklkXC7FHOiKZLQ&callback=initMap&libraries=geometry" async defer></script>
+</head>
+
+<body onload="run()">
+  <div id="map"></div>
+  <p id="appName">Premium Car Service <em id="sign">by Armanc Keser</em></p>
+</body>
+
+</html>

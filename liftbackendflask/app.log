@@ -1,0 +1,150 @@
+IN PAS
+IN PAS
+IN PAS
+IN PAS
+Username is: armanc
+Username is: armanc
+Username is: armanc
+Passenger found.
+{"_id": {"$oid": "5cafb47e84c451384f86e161"}, "username": "armanc", "lat": 5, "lng": 5, "created_at": {"$date": 1555004478314}}
+Username is: armanc
+Passenger found.
+{"_id": {"$oid": "5cafb47e84c451384f86e161"}, "username": "armanc", "lat": 5, "lng": 5, "created_at": {"$date": 1555004478314}}
+Username is: armanc
+Passenger found.
+{"_id": {"$oid": "5cafb47e84c451384f86e161"}, "username": "armanc", "lat": 5, "lng": 5, "created_at": {"$date": 1555004478314}}
+Username is: armanc
+Passenger found.
+{"_id": {"$oid": "5cafb47e84c451384f86e161"}, "username": "armanc", "lat": 5, "lng": 5, "created_at": {"$date": 1555004478314}}
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: manish
+Passenger not found
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: ardmanc
+Passenger not found
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armmanc
+Passenger not found
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+Username is: asrmanc
+Passenger not found
+Username is: asrmanc
+Passenger not found
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+{"$binary": "", "$type": "00"}
+{"$binary": "", "$type": "00"}
+{"$binary": "", "$type": "00"}
+{"$binary": "", "$type": "00"}
+b''
+b''
+b''
+b''
+b''
+b''
+b''
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+b''
+None
+None
+None
+None
+None
+None
+123
+NOT VALIDATED
+NOT VALIDATED
+NOT VALIDATED
+NOT VALIDATED
+<Response 104 bytes [200 OK]>
+<Response 104 bytes [200 OK]>
+NOT VALIDATED
+<Response 104 bytes [200 OK]>
+<Response 108 bytes [200 OK]>
+<Response 108 bytes [200 OK]>
+{'username': 'scrilol', 'lat': '4', 'lng': '3', 'created_at': datetime.datetime(2019, 4, 12, 0, 5, 39, 16081)}
+NOT VALIDATED
+Username is: armanc
+Passenger found.
+NOT VALIDATED
+NOT VALIDATED
+NOT VALIDATED
+NOT VALIDATED
+[]
+[{"_id": {"$oid": "5cb0177884c4511c68601f97"}, "username": "JANET", "lat": "42.409424300000005", "lng": "-71.1241737", "created_at": {"$date": 1555029816396}}, {"_id": {"$oid": "5cb0178784c4511c68601f98"}, "username": "JANET", "lat": "42.409424300000005", "lng": "-71.1241737", "created_at": {"$date": 1555029831322}}, {"_id": {"$oid": "5cb0178c84c4511c9075d29c"}, "username": "JANET", "lat": "42.409424300000005", "lng": "-71.1241737", "created_at": {"$date": 1555029836356}}, {"_id": {"$oid": "5cb0179584c4511cab80fb08"}, "username": "JANET", "lat": "42.405018", "lng": "-71.1180328", "created_at": {"$date": 1555029845864}}, {"_id": {"$oid": "5cb0179d84c4511cbeba0f11"}, "username": "JANET", "lat": "42.405018", "lng": "-71.1180328", "created_at": {"$date": 1555029853980}}, {"_id": {"$oid": "5cb017c384c4511cbeba0f12"}, "username": "JANET", "lat": "42.4094609", "lng": "-71.12415469999999", "created_at": {"$date": 1555029891521}}, {"_id": {"$oid": "5cb017fa84c4511d000c4d34"}, "username": "JANET", "lat": "42.409463699999996", "lng": "-71.12413269999999", "created_at": {"$date": 1555029946098}}]
+Username is: armanc
+Passenger found.
+b'\x00'
+b'\x00'
+False
+b'\x00'
+False
+b'\x00'
+vehicles
+vehicles
+vehicles
+{'vehicles': '[]'}
+Username is: armanc
+Passenger found.
+vehicles
+{'vehicles': '[]'}
+vehicles
+{'vehicles': '[]'}
+vehicles
+{'vehicles': '[]'}
+vehicles
+{'vehicles': '[]'}
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+Username is: armanc
+Passenger found.
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+b'[]'
+b'[{"_id": {"$oid": "5cb01b5a84c45120278e1034"}, "username": "Armanc", "lat": "4", "lng": "3", "created_at": {"$date": 1555030810864}}, {"_id": {"$oid": "5cb01b6484c45120278e1035"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030820746}}, {"_id": {"$oid": "5cb01b6784c45120278e1036"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030823035}}, {"_id": {"$oid": "5cb01b6884c45120278e1037"}, "username": "Armanc", "lat": "4", "lng": "3", "created_at": {"$date": 1555030824095}}, {"_id": {"$oid": "5cb01b6984c45120278e1038"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030825055}}, {"_id": {"$oid": "5cb01b6984c45120278e1039"}, "username": "Armanc", "lat": "4", "lng": "3", "created_at": {"$date": 1555030825830}}, {"_id": {"$oid": "5cb01b7684c45120278e103a"}, "username": "armanc", "lat": "42.4094277", "lng": "-71.1241165", "created_at": {"$date": 1555030838950}}, {"_id": {"$oid": "5cb01baa84c45120278e103b"}, "username": "Armanc", "lat": "4", "lng": "3", "created_at": {"$date": 1555030890962}}, {"_id": {"$oid": "5cb01bae84c45120278e103c"}, "username": "Armanc", "lat": "4", "lng": "3", "created_at": {"$date": 1555030894065}}, {"_id": {"$oid": "5cb01bb884c45120278e103d"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030904579}}, {"_id": {"$oid": "5cb01bc984c4512086a6cf67"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030921778}}, {"_id": {"$oid": "5cb01bd084c4512086a6cf68"}, "username": "ArJANET", "lat": "4", "lng": "3", "created_at": {"$date": 1555030928896}}]'
+Username is: armanc
+Passenger found.
+Username is: armanc
+Passenger found.
+NOT VALIDATED
+NOT VALIDATED

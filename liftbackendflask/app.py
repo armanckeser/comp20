@@ -10,7 +10,7 @@ import re
 import logging
 
 app = Flask(__name__)
-app.config["MONGO_URI"]= "mongodb://armanckeser:Rightanswer2470417@ds239206.mlab.com:39206/heroku_7smzhq1m"
+app.config["MONGO_URI"]= ""
 
 mongo = PyMongo(app)
 
